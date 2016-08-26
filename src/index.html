@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Online Editor</title>
+  
+  <link rel="stylesheet" style="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" style="text/css" href="lib/codemirror.css">
+  <link rel="stylesheet" style="text/css" href="addon/hint/show-hint.css">
+
+  <!--theme-->
+  <link rel="stylesheet" href="theme/panda-syntax.css">
+  <link rel="stylesheet" href="theme/monokai.css">
+  <link rel="stylesheet" href="theme/solarized.css">
+  
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!--CodeMirror-->
+  <script src="lib/codemirror.js"></script>
+  <script src="addon/selection/active-line.js"></script>
+  <script src="addon/edit/matchbrackets.js"></script>
+  <script src="addon/edit/closebrackets.js"></script>
+  <script src="mode/python.js"></script>
+  <script src="addon/hint/show-hint.js"></script>
+
+  <script src="editor.js"></script>
+</head>
+<body>
+  <div class="row">
+    <div class="text-center">
+      <h1>Online Editor</h1>
+    </div>
+  </div>
+  <button type="button" class="btn btn-default" aria-label="Left Align">vim mode</button>
+  <a href="">test</a>
+  <select onchange="themeChanged()" id="themeSelector">
+    <option selected>default</option>
+    <option>panda-syntax</option>
+    <option>monokai</option>
+    <option>solarized dark</option>
+  </select>
+  <div class="row-fluid">
+    <p class="offset4">language: python</p>
+  </div>
+
+  <br><br>
+  <p style="width:80%;margin-left:10%">
+    <textarea id="code"></textarea>
+  </p>
+</body>
+</html>
