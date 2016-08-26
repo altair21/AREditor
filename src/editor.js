@@ -1,24 +1,21 @@
 $(document).ready(init);
 
 var editor, keywords = {};
-var themeSelector;
+var currentTheme = 'monokai'
 
-function themeChanged() {
-  var theme = themeSelector.options[themeSelector.selectedIndex].textContent;
+function themeChanged(theme) {
   editor.setOption("theme", theme);
-  // location.hash = "#" + theme;
+  currentTheme = theme;
+  $("#themeSelector").text(theme + " ");
+  $("#themeSelector").append('<span class="caret"></span>');
 }
-// var choice = (location.hash && location.hash.slice(1)) ||
-//               (document.location.search &&
-//               decodeURIComponent(document.location.search.slice(1)));
-// if (choice) {
-//   themeSelector.value = choice;
-//   editor.setOption("theme", choice);
-// }
-// CodeMirror.on(window, "hashchange", function() {
-//   var theme = location.hash.slice(1);
-//   if (theme) { themeSelector.value = theme; themeChanged(); }
-// });
+
+function languageChanged(MIME, language) {
+  initEditor(MIME)
+  $("#languageSelector").text(language + " ");
+  $("#languageSelector").append('<span class="caret"></span>');
+}
+
 function initKeywords() {
   for (var i = 65; i <= 90; i++) {
     keywords["'" + String.fromCharCode(i) + "'"] = autoComplete;
@@ -33,17 +30,25 @@ function initKeywords() {
   keywords["'.'"] = autoComplete;
 }
 
-function initEditor() {
+function initEditor(language) {
+  $(".CodeMirror").remove();
+  console.log(language);
+  if (language === "text/x-python") {
+    $("#code").text("#!/usr/bin/env python\r# encoding: utf-8\r\r")
+  } else {
+    $("#code").text("");
+  }
   editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-      lineNumbers: true,  //显示行号
-      styleActiveLine: true, 
-      lineWrapping: true,
-      matchBrackets: true,  //高亮匹配括号
-      mode: "text/x-python",    //python编辑器
-      autoCloseBrackets: true,  //自动补全结束括号
-      extraKeys: keywords,
-      hintOptions: {completeSingle: false},
-    });
+    lineNumbers: true,  //显示行号
+    styleActiveLine: true, 
+    lineWrapping: true,
+    matchBrackets: true,  //高亮匹配括号
+    mode: language,
+    autoCloseBrackets: true,  //自动补全结束括号
+    extraKeys: keywords,
+    hintOptions: {completeSingle: false},
+  });
+  editor.setOption("theme", currentTheme);
 }
 
 function autoComplete(cm, pred) {
@@ -56,7 +61,6 @@ function autoComplete(cm, pred) {
 }
 
 function init() {
-  themeSelector = document.getElementById("themeSelector");
   initKeywords();
-  initEditor();
+  initEditor("text/x-python");  //默认Python语言
 }

@@ -22,32 +22,78 @@
   <script src="addon/selection/active-line.js"></script>
   <script src="addon/edit/matchbrackets.js"></script>
   <script src="addon/edit/closebrackets.js"></script>
-  <script src="mode/python.js"></script>
   <script src="addon/hint/show-hint.js"></script>
+
+  <!--mode-->
+  <script src="mode/python.js"></script>
+  <script src="mode/fortran.js"></script>
 
   <script src="editor.js"></script>
 </head>
 <body>
-  <div class="row">
-    <div class="text-center">
-      <h1>Online Editor</h1>
-    </div>
-  </div>
-  <button type="button" class="btn btn-default" aria-label="Left Align">vim mode</button>
-  <a href="">test</a>
-  <select onchange="themeChanged()" id="themeSelector">
-    <option selected>default</option>
-    <option>panda-syntax</option>
-    <option>monokai</option>
-    <option>solarized dark</option>
-  </select>
-  <div class="row-fluid">
-    <p class="offset4">language: python</p>
+<div class="container">
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation" class="active"><a href="#">Editor</a></li>
+        <li role="presentation"><a href="#">About</a></li>
+        <li role="presentation"><a href="" onclick="window.open('http://altair21.org')">Blog</a></li>
+      </ul>
+      <h2 class="text-muted">AR Editor</h2>
+    </nav>
   </div>
 
-  <br><br>
-  <p style="width:80%;margin-left:10%">
-    <textarea id="code"></textarea>
-  </p>
+  <br>
+  <div class="row">
+    <div class="col-lg-9">
+      
+    </div>
+
+    <div class="col-lg-3 text-right">
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="languageSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Python
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#" onclick="languageChanged('text/x-python', 'Python');return false;">Python</a></li>
+            <li><a href="#" onclick="languageChanged('text/x-fortran', 'Fortran');return false;">Fortran</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="btn-group">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="themeSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Theme
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#" onclick="themeChanged('default');return false;">default</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#" onclick="themeChanged('panda-syntax');return false;">panda-syntax</a></li>
+            <li><a href="#" onclick="themeChanged('monokai');return false;">monokai</a></li>
+            <li><a href="#" onclick="themeChanged('solarized dark');return false;">solarized dark</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <div class="row">
+    <div class="col-lg-12">
+      <p>
+        <textarea id="code"></textarea>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-11"></div>
+    <div class="col-lg-1">
+      <p><a class="btn btn-lg btn-success" href="#" role="button">Save</a></p>
+    </div>
+  </div>
+</div>
 </body>
 </html>
