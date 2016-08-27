@@ -1,17 +1,22 @@
 $(document).ready(init);
 
 var editor, keywords = {};
-var currentTheme = 'monokai'
+var current = {
+  theme: 'monokai',
+  mode: 'text/x-python',
+};
+var vimMode = false;
 
 function themeChanged(theme) {
   editor.setOption("theme", theme);
-  currentTheme = theme;
+  current.theme = theme;
   $("#themeSelector").text(theme + " ");
   $("#themeSelector").append('<span class="caret"></span>');
 }
 
 function languageChanged(MIME, language) {
-  initEditor(MIME)
+  initEditor(MIME);
+  current.mode = MIME;
   $("#languageSelector").text(language + " ");
   $("#languageSelector").append('<span class="caret"></span>');
 }
@@ -30,25 +35,34 @@ function initKeywords() {
   keywords["'.'"] = autoComplete;
 }
 
-function initEditor(language) {
+function initEditor(obj) {
   $(".CodeMirror").remove();
-  console.log(language);
-  if (language === "text/x-python") {
+  if (obj.mode === "text/x-python") {
     $("#code").text("#!/usr/bin/env python\r# encoding: utf-8\r\r")
   } else {
     $("#code").text("");
   }
-  editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-    lineNumbers: true,  //显示行号
-    styleActiveLine: true, 
+  editor = CodeMirror.fromTextArea(document.getElementById('code'), obj);
+  editor.setOption("theme", current.theme);
+}
+
+function updateEditor(obj) {
+  var origText = $("#code").text;
+  var defaultConfig = {
+    lineNumbers: true,
+    styleActiveLine: true,
     lineWrapping: true,
-    matchBrackets: true,  //高亮匹配括号
-    mode: language,
-    autoCloseBrackets: true,  //自动补全结束括号
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    mode: current.mode,
     extraKeys: keywords,
     hintOptions: {completeSingle: false},
-  });
-  editor.setOption("theme", currentTheme);
+  }
+  for (var key in obj) {
+    defaultConfig[key] = obj[key];
+  }
+
+  initEditor(defaultConfig);
 }
 
 function autoComplete(cm, pred) {
@@ -62,5 +76,5 @@ function autoComplete(cm, pred) {
 
 function init() {
   initKeywords();
-  initEditor("text/x-python");  //默认Python语言
+  updateEditor();  //默认Python语言
 }
