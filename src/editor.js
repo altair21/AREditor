@@ -6,6 +6,28 @@ var current = {
   mode: 'text/x-python',
 };
 var vimMode = false;
+var commandDisplay;
+
+function editModeChanged() {
+  vimMode = !vimMode;
+  var funcE = function (e) {
+    commandDisplay.innerHTML = 'Key Buffer: ';
+  };
+  var funcKey = function (key) {
+    commandDisplay.innerHTML = commandDisplay.innerHTML + key;
+  };
+  if (vimMode) {
+    $("#vim-command-display-div").css('display', 'inline');
+    updateEditor({ keyMap: "vim" });
+    CodeMirror.on(editor, 'vim-keypress', funcKey);
+    CodeMirror.on(editor, 'vim-command-done', funcE);
+  } else {
+    $("#vim-command-display-div").css('display', 'none');
+    CodeMirror.off(editor, 'vim-keypress', funcKey);
+    CodeMirror.off(editor, 'vim-command-done', funcE);
+    return updateEditor();
+  }
+}
 
 function themeChanged(theme) {
   editor.setOption("theme", theme);
@@ -15,7 +37,7 @@ function themeChanged(theme) {
 }
 
 function languageChanged(MIME, language) {
-  initEditor(MIME);
+  updateEditor({ mode: MIME });
   current.mode = MIME;
   $("#languageSelector").text(language + " ");
   $("#languageSelector").append('<span class="caret"></span>');
@@ -35,9 +57,12 @@ function initKeywords() {
   keywords["'.'"] = autoComplete;
 }
 
-function initEditor(obj) {
+function initEditor(obj, origText) {
   $(".CodeMirror").remove();
-  if (obj.mode === "text/x-python") {
+  if (origText) {
+    $("#code").text(origText);
+  }
+  else if (obj.mode === "text/x-python") {
     $("#code").text("#!/usr/bin/env python\r# encoding: utf-8\r\r")
   } else {
     $("#code").text("");
@@ -47,7 +72,7 @@ function initEditor(obj) {
 }
 
 function updateEditor(obj) {
-  var origText = $("#code").text;
+  var origText = $("#code").text();
   var defaultConfig = {
     lineNumbers: true,
     styleActiveLine: true,
@@ -62,12 +87,14 @@ function updateEditor(obj) {
     defaultConfig[key] = obj[key];
   }
 
-  initEditor(defaultConfig);
+  initEditor(defaultConfig, origText);
 }
 
 function autoComplete(cm, pred) {
   if (!pred || pred()) {
-    if (!cm.state.completionActive) {
+    if (vimMode && !cm.state.vim.insertMode) {
+      
+    } else if (!cm.state.completionActive) {
       cm.showHint();
     }
   }
@@ -75,6 +102,7 @@ function autoComplete(cm, pred) {
 }
 
 function init() {
+  commandDisplay = document.getElementById('vim-command-display');
   initKeywords();
   updateEditor();  //默认Python语言
 }
